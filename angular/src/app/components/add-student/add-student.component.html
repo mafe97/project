@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">Add Students</div>
+    <div class="card-body">
+
+        <form [formGroup]="studentsForm" (ngSubmit)="sendData()">
+
+            <div class="mb-3">
+                <label for="" class="form-label">Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    formControlName="name"
+                    name=""
+                    id="name"
+                    aria-describedby="helpId"
+                    placeholder="Write your name"
+                />
+            </div>
+            <div class="form-group  col-lg-3">
+                <label for="">Grade</label>
+                <select name="grade" id="grade" class="form-control" formControlName="grade" required>
+                    <option value="">Select a Grade</option>
+                    <option value="grade6">Grade 6</option>
+                    <option value="grade7">Grade 7</option>
+                    <option value="grade8">Grade 8</option>
+                    <option value="grade9">Grade 9</option>
+                    <option value="grade10">Grade 10</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Marks</label>              
+                <input
+                    type="text"
+                    class="form-control"
+                    formControlName="marks"
+                    name=""
+                    id="marks"
+                    aria-describedby="helpId"
+                    placeholder="Write your Mark"
+                />
+            </div>
+            <div class="btn-group" role="group" aria-label="Button group name">
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    Add
+                </button>
+                <button
+                type="button"
+                class="btn btn-primary"
+                >
+                Cancel
+                </button>
+            </div>
+                
+        </form>
+</div>
