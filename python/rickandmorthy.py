@@ -3,6 +3,15 @@ import json
  
 #request to first episode
 url = 'https://rickandmortyapi.com/api/episode/1' #api
+
+response = requests.get(url)
+if response.status_code == 200:
+    content = response.content
+    #print content in file cartoons.json
+    file = open('cartoon_file/cartoons.json', 'wb')
+    file.write(content)
+    file.close()
+
 data = requests.get(url)
 j = data.json()
 print(j['name'])
