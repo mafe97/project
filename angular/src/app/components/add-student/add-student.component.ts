@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiServiceService } from '../../services/api-service.service'; 
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-student',
@@ -30,11 +29,14 @@ export class AddStudentComponent implements OnInit {
   }
 
   sendData():any { 
-    console.log(this.studentsForm.value); 
-    // this.router.navigate(['/list']);
-    this.apiService.AddStudent(this.studentsForm.value).subscribe();
-    
-    this.router.navigate(['/list']);
-    
+     
+    if (this.studentsForm.valid) {
+      console.log(this.studentsForm.value);
+      this.apiService.AddStudent(this.studentsForm.value).subscribe(response => {
+        console.log('Record Created:', response);
+      });
+      
+      this.router.navigate(['/list']);
+    }
   }
 }
