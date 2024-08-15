@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { API } from '../enviroments/ids';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { StudentClass } from '../classes/student.class';
 import { Observable } from 'rxjs';
 
@@ -13,11 +13,12 @@ export class ApiServiceService {
 
   constructor( private http : HttpClient ) { }
 
-  AddStudent(studentData : StudentClass): Observable<any> {
-      return this.http.post<any>(`${this.baseUrl}/adddata.php`, studentData);
-    }
+  AddStudent(studentData: StudentClass): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>(this.baseUrl, studentData, { headers });
+  }
     
-  GetStudent(){
-    return this.http.get(this.baseUrl);
+  GetStudent(): Observable<any> {
+    return this.http.get<any>(this.baseUrl);
   }
 }
