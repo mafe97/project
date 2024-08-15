@@ -1,33 +1,76 @@
 import requests
-import json
- 
-#request to first episode
-url = 'https://rickandmortyapi.com/api/episode/1' #api
+import mysql.connector
+from datetime import datetime
 
+
+# Step 1: Call the Rick and Morty API
+url = "https://rickandmortyapi.com/api/character"
 response = requests.get(url)
+data = response.json()
+
 if response.status_code == 200:
-    content = response.content
-    #print content in file cartoons.json
-    file = open('cartoon_file/cartoons.json', 'wb')
-    file.write(content)
-    file.close()
+        content = response.content
+        #print content in file google.html
+        file = open('characters.json', 'wb')
+        file.write(content)
+        file.close()
 
-data = requests.get(url)
-j = data.json()
-print(j['name'])
-characters = j['characters']
-list_names = list()
-list_names_human = list()
-list_names_other = list()
+# Step 2: Connect to MySQL database
+db_config = {
+    'user': 'root',
+    'password': 'new-password',
+    'host': 'localhost',
+    'database': 'cartoons'
+}
 
-for character in characters:
-    req = requests.get(character)
-    js = req.json()
-    name = js['name']
-    if js['species'] == 'Human':
-        list_names_human.append(name)
-    else:
-        list_names_other.append(name)
-        
-print('Others:', list_names_other)
-print('Humans:', list_names_human)
+conn = mysql.connector.connect(**db_config)
+cursor = conn.cursor()
+
+# Step 3: Create table if it does not exist
+create_table_query = """
+CREATE TABLE IF NOT EXISTS characters (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    status VARCHAR(50),
+    species VARCHAR(100),
+    type VARCHAR(100),
+    gender VARCHAR(50),
+    origin VARCHAR(100),
+    location VARCHAR(100),
+    image VARCHAR(255),
+    url VARCHAR(255),
+    created DATETIME
+)
+"""
+cursor.execute(create_table_query)
+
+# Step 4: Insert data into table
+insert_character_query = """
+INSERT INTO characters (id, name, status, species, type, gender, origin, location, image, url, created)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+"""
+
+for character in data['results']:
+    # Convert the datetime string to a format that MySQL can accept
+    created_datetime = datetime.strptime(character['created'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d %H:%M:%S')
+    
+    character_data = (
+        character['id'],
+        character['name'],
+        character['status'],
+        character['species'],
+        character['type'],
+        character['gender'],
+        character['origin']['name'],
+        character['location']['name'],
+        character['image'],
+        character['url'],
+        created_datetime
+    )
+    cursor.execute(insert_character_query, character_data)
+
+
+# Commit and close the connection
+conn.commit()
+cursor.close()
+conn.close()
