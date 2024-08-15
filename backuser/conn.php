@@ -1,13 +1,16 @@
 <?php
-//connection to database
-  define('db_server', 'localhost');
-  define('db_username', 'root');
-  define('db_password', '');
-  define('db_name', 'student');
-//send paraneters
-  $conn = mysqli_connect(db_server, db_username, db_password, db_name);
-//conditional for stablish connection
-  if ($conn === false) {
-      die("ERROR: Could not connect." . mysqli_connect_error());
-  }
+// used to connect to the database
+$host = "localhost";
+$db_name = "student";
+$username = "root";
+$password = "";
+  
+try {
+    $con = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
+}
+  
+// show error
+catch(PDOException $exception){
+    echo "Connection error: " . $exception->getMessage();
+}
 ?>
